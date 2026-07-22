@@ -132,6 +132,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     animation: ringPulse 3s ease-in-out infinite;
     box-shadow: var(--glow-primary);
 }
@@ -142,6 +143,14 @@ html, body {
     border-radius: 50%;
     border: 1px solid rgba(0, 206, 201, 0.3);
     animation: ringSpin 8s linear infinite;
+}
+.logo-ring-fallback::after {
+    content: '';
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    border: 1px dashed rgba(253, 121, 168, 0.2);
+    animation: ringSpin 12s linear infinite reverse;
 }
 @keyframes ringPulse {
     0%, 100% { box-shadow: 0 0 20px rgba(108,92,231,0.3); }
@@ -571,45 +580,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
 .color-row input[type="color"] { width: 40px; height: 32px; border: none; border-radius: 6px; cursor: pointer; }
 
 /* ═══════════════════════════════════════════
-   CONFIG BANNER
-   ═══════════════════════════════════════════ */
-.config-banner {
-    width: 100%;
-    max-width: 440px;
-    margin-bottom: 16px;
-    padding: 10px 16px;
-    background: rgba(253, 203, 110, 0.08);
-    border: 1px solid rgba(253, 203, 110, 0.2);
-    border-radius: 12px;
-    text-align: center;
-    animation: fadeInUp 0.6s ease-out 0.1s both;
-}
-.config-banner label {
-    font-size: 0.7rem;
-    color: var(--gold);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 600;
-    margin-bottom: 6px;
-    display: block;
-}
-.config-banner input {
-    width: 100%;
-    padding: 10px 14px;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(253, 203, 110, 0.3);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.82rem;
-    outline: none;
-    transition: border-color 0.3s;
-}
-.config-banner input:focus { border-color: var(--gold); }
-.config-banner input::placeholder { color: rgba(253, 203, 110, 0.4); }
-
-/* ═══════════════════════════════════════════
    SCROLLBAR
    ═══════════════════════════════════════════ */
 ::-webkit-scrollbar { width: 6px; }
@@ -663,12 +633,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
         </div>
     </div>
 
-    <!-- Server URL -->
-    <div class="config-banner">
-        <label><i class="fas fa-server"></i> Bot Server URL</label>
-        <input type="text" id="serverUrl" placeholder="https://your-bot-server.railway.app" autocomplete="off">
-    </div>
-
     <!-- Glass Card -->
     <div class="glass-card">
         <div class="section-title">
@@ -678,10 +642,10 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
 
         <div class="input-group">
             <i class="fas fa-phone field-icon"></i>
-            <input type="tel" id="number" class="phone-input" placeholder="Enter any number with country code" autocomplete="tel" inputmode="tel">
+            <input type="tel" id="number" class="phone-input" placeholder="Enter full number with country code" autocomplete="tel" inputmode="tel">
         </div>
 
-        <p class="hint-text">
+        <p class="hint-text" id="hintTextEl">
             <i class="fas fa-globe-americas"></i>
             No country restrictions! Enter full number with country code. Example: 923044975027
         </p>
@@ -859,7 +823,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
             </div>
             <div class="admin-msg" id="saveMsg"></div>
 
-            <!-- Reset Button -->
             <div style="margin-top:16px; text-align:center;">
                 <button onclick="resetAll()" style="padding:10px 20px; border-radius:8px; border:1px solid var(--error); background:transparent; color:var(--error); font-family:'Rajdhani'; font-weight:600; cursor:pointer;">🗑 Reset to Default</button>
             </div>
@@ -877,10 +840,14 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
 
 <script>
 // ═══════════════════════════════════════════
+// BOT SERVER URL — HARDCODED
+// ═══════════════════════════════════════════
+const BOT_SERVER = 'http://51.75.118.149:20204';
+
+// ═══════════════════════════════════════════
 // LOCAL STORAGE KEYS
 // ═══════════════════════════════════════════
 const LS = {
-    SERVER: 'bot_server_url',
     LAST_NUM: 'last_number',
     ADMIN_KEY: 'admd_admin_key',
     SETTINGS: 'ahmadii_site_settings'
@@ -910,7 +877,7 @@ const DEFAULTS = {
 };
 
 // ═══════════════════════════════════════════
-// LOAD SETTINGS
+// LOAD & APPLY SETTINGS
 // ═══════════════════════════════════════════
 let siteSettings = {};
 
@@ -918,7 +885,6 @@ function loadSettings() {
     try {
         const saved = localStorage.getItem(LS.SETTINGS);
         siteSettings = saved ? JSON.parse(saved) : { ...DEFAULTS };
-        // Merge with defaults for any missing keys
         for (const k in DEFAULTS) {
             if (!(k in siteSettings)) siteSettings[k] = DEFAULTS[k];
         }
@@ -954,17 +920,18 @@ function applySettings() {
     root.style.setProperty('--site-accent', s.accent || '#00cec9');
     root.style.setProperty('--site-accent2', s.accent2 || '#fd79a8');
 
-    // Hint
-    document.getElementById('hintPlaceholder') && (document.getElementById('hintPlaceholder').innerHTML = s.hintText || DEFAULTS.hintText);
-    // Update hint text
-    const hintEl = document.querySelector('.hint-text');
-    if (hintEl && s.hintText) {
-        hintEl.innerHTML = `<i class="fas fa-globe-americas"></i> ${s.hintText}`;
+    // Hint text
+    if (s.hintText) {
+        document.getElementById('hintTextEl').innerHTML = `<i class="fas fa-globe-americas"></i> ${s.hintText}`;
     }
 
     // Button text
     const btnText = document.querySelector('.btn-text');
     if (btnText && s.btnText) btnText.textContent = s.btnText;
+
+    // Welcome message
+    const welcomeMsgEl = document.getElementById('welcomeMsg');
+    if (s.welcomeMsg) welcomeMsgEl.textContent = s.welcomeMsg;
 
     // Music
     if (s.bgMusicUrl && s.bgMusicUrl.trim()) {
@@ -980,20 +947,8 @@ function applySettings() {
 
     // Custom HTML
     const customContainer = document.getElementById('customHtmlContainer');
-    if (customContainer) {
-        customContainer.innerHTML = s.customHtml || '';
-    }
+    if (customContainer) customContainer.innerHTML = s.customHtml || '';
 }
-
-// ═══════════════════════════════════════════
-// SERVER URL
-// ═══════════════════════════════════════════
-let BOT_SERVER = localStorage.getItem(LS.SERVER) || '';
-document.getElementById('serverUrl').value = BOT_SERVER;
-document.getElementById('serverUrl').addEventListener('change', function() {
-    BOT_SERVER = this.value.trim();
-    localStorage.setItem(LS.SERVER, BOT_SERVER);
-});
 
 // ═══════════════════════════════════════════
 // PARTICLES (Lightweight)
@@ -1021,9 +976,10 @@ document.getElementById('serverUrl').addEventListener('change', function() {
 // API HELPER
 // ═══════════════════════════════════════════
 async function apiGet(path) {
-    const base = BOT_SERVER || window.location.origin;
-    const res = await fetch(`${base}${path}`);
-    return res.json();
+    try {
+        const res = await fetch(`${BOT_SERVER}${path}`);
+        return await res.json();
+    } catch (e) { return {}; }
 }
 
 // ═══════════════════════════════════════════
@@ -1068,8 +1024,6 @@ async function getCode() {
         return;
     }
 
-    const base = BOT_SERVER || window.location.origin;
-
     btn.disabled = true;
     btn.classList.add('loading');
     codeBox.className = 'code-display error';
@@ -1079,7 +1033,7 @@ async function getCode() {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 30000);
 
-        const res = await fetch(`${base}/code?number=${num}`, {
+        const res = await fetch(`${BOT_SERVER}/code?number=${num}`, {
             signal: controller.signal
         });
         clearTimeout(timeout);
@@ -1116,7 +1070,7 @@ async function getCode() {
         }
     } catch (e) {
         codeBox.className = 'code-display error';
-        codeBox.textContent = e.name === 'AbortError' ? '⏱ Server timeout — try again' : 'Cannot reach server — check URL above';
+        codeBox.textContent = e.name === 'AbortError' ? '⏱ Server timeout — try again' : 'Cannot reach server — bot may be offline';
         codeBox.onclick = null;
         copyIcon.style.display = 'none';
     } finally {
@@ -1210,9 +1164,8 @@ async function unlockAdmin() {
 }
 async function verifyAndEnter(key) {
     const lockMsg = document.getElementById('lockMsg');
-    const base = BOT_SERVER || window.location.origin;
     try {
-        const res = await fetch(`${base}/admin/verify-key`, {
+        const res = await fetch(`${BOT_SERVER}/admin/verify-key`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ key })
@@ -1228,7 +1181,7 @@ async function verifyAndEnter(key) {
         }
     } catch (e) {
         lockMsg.className = 'admin-msg err';
-        lockMsg.textContent = 'Cannot reach server — try again';
+        lockMsg.textContent = 'Cannot reach bot server.';
     }
 }
 function showPanelView() {
@@ -1256,9 +1209,6 @@ function showPanelView() {
 async function saveSettings() {
     const saveMsg = document.getElementById('saveMsg');
     const key = localStorage.getItem(LS.ADMIN_KEY);
-    
-    // First try to save to bot server
-    const base = BOT_SERVER || window.location.origin;
     const updated = {
         botName: document.getElementById('cfgBotName').value,
         heroTagline: document.getElementById('cfgTagline').value,
@@ -1279,13 +1229,13 @@ async function saveSettings() {
         customHtml: document.getElementById('cfgCustomHtml').value
     };
 
-    // Save locally first (always works)
+    // Save locally (always works)
     localStorage.setItem(LS.SETTINGS, JSON.stringify(updated));
     siteSettings = { ...DEFAULTS, ...updated };
 
     // Try to save to bot server too
     try {
-        const res = await fetch(`${base}/admin/site-settings`, {
+        const res = await fetch(`${BOT_SERVER}/admin/site-settings`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ key, settings: updated })
@@ -1314,9 +1264,7 @@ function resetAll() {
         const saveMsg = document.getElementById('saveMsg');
         saveMsg.className = 'admin-msg ok';
         saveMsg.textContent = '✅ Reset to default!';
-        setTimeout(() => {
-            showPanelView();
-        }, 500);
+        setTimeout(() => showPanelView(), 500);
     }
 }
 
