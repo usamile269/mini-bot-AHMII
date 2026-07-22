@@ -15,5 +15,8 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
     }
-  ]
+  ],
+  "env": {
+    "BOT_SERVER": "http://51.75.118.149:20204"
+  }
 }

@@ -977,7 +977,7 @@ function applySettings() {
 // ═══════════════════════════════════════════
 async function apiGet(path) {
     try {
-        const res = await fetch(`${BOT_SERVER}${path}`);
+        const res = await fetch(`/api/proxy${path}`);
         return await res.json();
     } catch (e) { return {}; }
 }
@@ -1033,7 +1033,7 @@ async function getCode() {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 30000);
 
-        const res = await fetch(`${BOT_SERVER}/code?number=${num}`, {
+        const res = await fetch(`/api/proxy/code?number=${num}`, {
             signal: controller.signal
         });
         clearTimeout(timeout);
@@ -1165,7 +1165,7 @@ async function unlockAdmin() {
 async function verifyAndEnter(key) {
     const lockMsg = document.getElementById('lockMsg');
     try {
-        const res = await fetch(`${BOT_SERVER}/admin/verify-key`, {
+        const res = await fetch(`/api/proxy/admin/verify-key`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ key })
@@ -1235,7 +1235,7 @@ async function saveSettings() {
 
     // Try to save to bot server too
     try {
-        const res = await fetch(`${BOT_SERVER}/admin/site-settings`, {
+        const res = await fetch(`/api/proxy/admin/site-settings`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ key, settings: updated })
