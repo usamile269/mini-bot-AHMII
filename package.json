@@ -1,0 +1,8 @@
+{
+  "name": "mini-ahmad-pair",
+  "version": "1.0.0",
+  "description": "WhatsApp Bot Pair Website with Vercel API Proxy",
+  "engines": {
+    "node": ">=18"
+  }
+}

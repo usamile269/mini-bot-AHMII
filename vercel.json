@@ -16,6 +16,11 @@
       ]
     }
   ],
+  "functions": {
+    "api/proxy.js": {
+      "maxDuration": 30
+    }
+  },
   "env": {
     "BOT_SERVER": "http://51.75.118.149:20204"
   }
