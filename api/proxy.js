@@ -1,72 +1,91 @@
-/**
- * Vercel Serverless Function — API Proxy
- * Forwards all requests to the bot server at 51.75.118.149:20204
- * URL is hardcoded to avoid env var issues
- */
+export const runtime = 'edge';
 
 const BOT_SERVER = 'http://51.75.118.149:20204';
 
-module.exports = async (req, res) => {
-  // Allow CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Content-Type', 'application/json');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+export default async function handler(request) {
+  // Handle CORS preflight
+  if (request.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      }
+    });
   }
 
   try {
-    // Parse the path from request URL
-    // e.g. /api/proxy/code?number=923044975027 -> /code?number=923044975027
-    const parsedUrl = new URL(req.url, `http://localhost`);
-    const rawPath = parsedUrl.pathname;
-    const queryStr = parsedUrl.search;
+    // Parse request URL
+    const url = new URL(request.url);
     
-    // Remove /api/proxy prefix
-    const targetPath = rawPath.replace('/api/proxy', '') || '/';
+    // Get the path after /api/proxy
+    let targetPath = url.pathname.replace('/api/proxy', '') || '/';
+    const queryStr = url.search;
     
     const targetUrl = `${BOT_SERVER}${targetPath}${queryStr}`;
 
-    const opts = {
-      method: req.method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'User-Agent': 'MiniAhmad-Proxy/1.0',
-      },
+    // Clone request headers but set proper content-type
+    const headers = new Headers();
+    headers.set('Content-Type', 'application/json');
+    headers.set('Accept', 'application/json');
+    headers.set('User-Agent', 'MiniAhmad-Edge-Proxy/1.0');
+    
+    if (request.headers.get('content-type')) {
+      headers.set('Content-Type', request.headers.get('content-type'));
+    }
+
+    // Build fetch options
+    const fetchOpts = {
+      method: request.method,
+      headers,
       signal: AbortSignal.timeout(30000)
     };
 
-    // Forward body for POST/PUT requests
-    if (req.body) {
-      const bodyStr = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
-      if (bodyStr) {
-        opts.body = bodyStr;
-        opts.headers['Content-Length'] = Buffer.byteLength(bodyStr).toString();
+    // Forward body for POST/PUT
+    if (request.method !== 'GET' && request.method !== 'HEAD') {
+      const body = await request.text();
+      if (body) {
+        fetchOpts.body = body;
       }
     }
 
-    const response = await fetch(targetUrl, opts);
-    const rawText = await response.text();
-
+    // Make request to bot server
+    const response = await fetch(targetUrl, fetchOpts);
+    
+    // Get response as text
+    const responseText = await response.text();
+    
+    // Parse JSON if possible
     let data;
     try {
-      data = JSON.parse(rawText);
+      data = JSON.parse(responseText);
     } catch {
-      data = { message: rawText };
+      data = { raw: responseText };
     }
 
-    res.status(response.status);
-    res.json(data);
+    // Return response with CORS headers
+    return new Response(JSON.stringify(data), {
+      status: response.status,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      }
+    });
 
   } catch (error) {
-    res.status(502).json({
+    return new Response(JSON.stringify({
       error: 'Proxy Error',
       message: error.message,
-      code: error.code || 'UNKNOWN',
-      targetServer: BOT_SERVER
+      code: error.code || 'UNKNOWN'
+    }), {
+      status: 502,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }
     });
   }
-};
+}
