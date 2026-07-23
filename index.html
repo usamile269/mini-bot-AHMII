@@ -11,9 +11,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-/* ═══════════════════════════════════════════
-   RESET & CSS VARIABLES (Dynamic via JS)
-   ═══════════════════════════════════════════ */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
 :root {
@@ -44,9 +41,6 @@ html, body {
     overflow-x: hidden;
 }
 
-/* ═══════════════════════════════════════════
-   ANIMATED BACKGROUND
-   ═══════════════════════════════════════════ */
 .bg-gradient {
     position: fixed;
     inset: 0;
@@ -89,9 +83,6 @@ html, body {
     100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
 }
 
-/* ═══════════════════════════════════════════
-   MAIN
-   ═══════════════════════════════════════════ */
 .main-wrap {
     position: relative;
     z-index: 2;
@@ -103,9 +94,6 @@ html, body {
     padding: 20px 16px;
 }
 
-/* ═══════════════════════════════════════════
-   BRAND / LOGO
-   ═══════════════════════════════════════════ */
 .brand-section {
     text-align: center;
     margin-bottom: 24px;
@@ -217,9 +205,6 @@ html, body {
     50% { opacity: 0.4; box-shadow: 0 0 2px var(--success); }
 }
 
-/* ═══════════════════════════════════════════
-   GLASS CARD
-   ═══════════════════════════════════════════ */
 .glass-card {
     width: 100%;
     max-width: 440px;
@@ -261,9 +246,6 @@ html, body {
 .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--glass-border), transparent); }
 .section-title i { color: var(--primary-light); font-size: 0.9rem; }
 
-/* ═══════════════════════════════════════════
-   INPUT
-   ═══════════════════════════════════════════ */
 .input-group { position: relative; margin-bottom: 16px; }
 .input-group i.field-icon {
     position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
@@ -298,9 +280,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
 }
 .hint-text i { color: var(--accent); margin-right: 4px; }
 
-/* ═══════════════════════════════════════════
-   BUTTON
-   ═══════════════════════════════════════════ */
 .btn-pair {
     width: 100%;
     padding: 16px;
@@ -345,9 +324,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
 .btn-pair.loading .btn-text { display: none; }
 .btn-pair.loading .spinner { display: block; }
 
-/* ═══════════════════════════════════════════
-   RESULT BOX
-   ═══════════════════════════════════════════ */
 #result { margin-top: 24px; display: none; animation: fadeInUp 0.5s ease-out; }
 #result.show { display: block; }
 .result-card {
@@ -408,9 +384,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
 .copy-icon { font-size: 0.75rem; color: var(--text-dim); margin-top: 6px; }
 .copy-icon i { margin-right: 4px; }
 
-/* ═══════════════════════════════════════════
-   STEPS
-   ═══════════════════════════════════════════ */
 .steps-section { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--glass-border); }
 .steps-title {
     font-family: 'Rajdhani', sans-serif;
@@ -448,9 +421,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
     color: var(--primary-light);
 }
 
-/* ═══════════════════════════════════════════
-   MODAL
-   ═══════════════════════════════════════════ */
 #welcomeModal {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.9);
@@ -479,9 +449,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
 }
 .welcome-content .btn-close:hover { background: var(--success); color: white; }
 
-/* ═══════════════════════════════════════════
-   FOOTER
-   ═══════════════════════════════════════════ */
 .site-footer {
     text-align: center;
     margin-top: 28px;
@@ -495,9 +462,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
 .footer-links a { color: var(--text-dim); text-decoration: none; font-size: 1rem; transition: color 0.3s, transform 0.3s; }
 .footer-links a:hover { color: var(--primary-light); transform: translateY(-2px); }
 
-/* ═══════════════════════════════════════════
-   ADMIN PANEL (Hidden)
-   ═══════════════════════════════════════════ */
 #adminOverlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.85);
@@ -574,21 +538,14 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
 .admin-msg.ok { color: var(--success); }
 .admin-msg.err { color: var(--error); }
 
-/* Color picker row */
 .color-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
 .color-row label { font-size: 0.72rem; color: var(--text-dim); min-width: 80px; }
 .color-row input[type="color"] { width: 40px; height: 32px; border: none; border-radius: 6px; cursor: pointer; }
 
-/* ═══════════════════════════════════════════
-   SCROLLBAR
-   ═══════════════════════════════════════════ */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
 
-/* ═══════════════════════════════════════════
-   RESPONSIVE
-   ═══════════════════════════════════════════ */
 @media (max-width: 480px) {
     .bot-name { font-size: 1.4rem; letter-spacing: 2px; }
     .glass-card { padding: 28px 20px; border-radius: 20px; }
@@ -617,7 +574,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
 
 <div class="main-wrap">
 
-    <!-- Brand -->
     <div class="brand-section">
         <div class="logo-container" id="logoContainer">
             <img class="owner-pic" id="ownerPic" src="" alt="Owner" style="display:none;">
@@ -633,7 +589,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
         </div>
     </div>
 
-    <!-- Glass Card -->
     <div class="glass-card">
         <div class="section-title">
             <i class="fas fa-mobile-alt"></i>
@@ -655,7 +610,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
             <div class="spinner"></div>
         </button>
 
-        <!-- Result -->
         <div id="result">
             <div class="result-card">
                 <div class="result-label">Your Pairing Code</div>
@@ -667,7 +621,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
             </div>
         </div>
 
-        <!-- Steps -->
         <div class="steps-section">
             <div class="steps-title">
                 <i class="fas fa-list-ol"></i>
@@ -694,7 +647,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
         </div>
     </div>
 
-    <!-- Footer -->
     <div class="site-footer">
         <div><span class="footer-brand" id="footerBrand">™ 𝑨𝑯𝑴𝑨𝑫 𝑴𝑰𝑵𝑰 ᥫᩣ</span> · <span id="footerText">Powered by Ahmad</span></div>
         <div class="footer-links">
@@ -706,7 +658,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
     </div>
 </div>
 
-<!-- Welcome Modal -->
 <div id="welcomeModal">
     <div class="welcome-content">
         <i class="fas fa-check-circle"></i>
@@ -716,10 +667,8 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
     </div>
 </div>
 
-<!-- Hidden Admin Panel -->
 <div id="adminOverlay">
     <div class="admin-panel">
-        <!-- Lock View -->
         <div id="adminLockView">
             <h2>🔒 Admin Access</h2>
             <p class="sub">Enter the admin key to manage all settings.</p>
@@ -734,7 +683,6 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
             <div class="admin-msg" id="lockMsg"></div>
         </div>
 
-        <!-- Panel View -->
         <div id="adminPanelView" style="display:none;">
             <h2>⚙️ Full Admin Panel</h2>
             <p class="sub">Control everything — colors, images, music, links, messages & more!</p>
@@ -830,19 +778,17 @@ input.phone-input::placeholder { color: rgba(136,136,170,0.5); }
     </div>
 </div>
 
-<!-- Background Audio -->
 <audio id="bgAudio" loop></audio>
 
-<!-- Music Toggle -->
 <button id="musicToggle" title="Play/Pause Music" style="position:fixed;bottom:20px;right:20px;z-index:50;width:48px;height:48px;border-radius:50%;border:1px solid var(--glass-border);background:var(--bg-card);backdrop-filter:blur(10px);color:var(--text-dim);font-size:1.1rem;display:none;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 15px rgba(0,0,0,0.3);">
     <i class="fas fa-music"></i>
 </button>
 
 <script>
 // ═══════════════════════════════════════════
-// BOT SERVER URL — HARDCODED
+// API PROXY PATH (Vercel serverless function)
 // ═══════════════════════════════════════════
-const BOT_SERVER = 'http://51.75.118.149:20204';
+const API = '/api/proxy';
 
 // ═══════════════════════════════════════════
 // LOCAL STORAGE KEYS
@@ -876,9 +822,6 @@ const DEFAULTS = {
     customHtml: ''
 };
 
-// ═══════════════════════════════════════════
-// LOAD & APPLY SETTINGS
-// ═══════════════════════════════════════════
 let siteSettings = {};
 
 function loadSettings() {
@@ -896,14 +839,12 @@ function loadSettings() {
 
 function applySettings() {
     const s = siteSettings;
-    // Branding
     document.getElementById('botNameHeading').textContent = s.botName || DEFAULTS.botName;
     document.getElementById('taglineText').textContent = s.heroTagline || DEFAULTS.heroTagline;
     document.title = `${s.botName || DEFAULTS.botName} — Pair Device`;
     document.getElementById('footerBrand').textContent = s.botName || DEFAULTS.botName;
     document.getElementById('footerText').textContent = s.footerText || DEFAULTS.footerText;
     
-    // Logo
     if (s.ownerPic && s.ownerPic.trim()) {
         document.getElementById('ownerPic').src = s.ownerPic;
         document.getElementById('ownerPic').style.display = 'block';
@@ -914,44 +855,37 @@ function applySettings() {
         document.getElementById('logoChar').textContent = s.logoChar || 'A';
     }
 
-    // Colors
     const root = document.documentElement;
     root.style.setProperty('--site-primary', s.primary || '#6c5ce7');
     root.style.setProperty('--site-accent', s.accent || '#00cec9');
     root.style.setProperty('--site-accent2', s.accent2 || '#fd79a8');
 
-    // Hint text
     if (s.hintText) {
         document.getElementById('hintTextEl').innerHTML = `<i class="fas fa-globe-americas"></i> ${s.hintText}`;
     }
 
-    // Button text
     const btnText = document.querySelector('.btn-text');
     if (btnText && s.btnText) btnText.textContent = s.btnText;
 
-    // Welcome message
     const welcomeMsgEl = document.getElementById('welcomeMsg');
     if (s.welcomeMsg) welcomeMsgEl.textContent = s.welcomeMsg;
 
-    // Music
     if (s.bgMusicUrl && s.bgMusicUrl.trim()) {
         document.getElementById('bgAudio').src = s.bgMusicUrl;
         document.getElementById('musicToggle').style.display = 'flex';
     }
 
-    // Links
     if (s.channelLink) document.getElementById('channelLink').href = s.channelLink;
     if (s.ytLink) document.getElementById('ytLink').href = s.ytLink;
     if (s.telegramLink) document.getElementById('telegramLink').href = s.telegramLink;
     if (s.githubLink) document.getElementById('githubLink').href = s.githubLink;
 
-    // Custom HTML
     const customContainer = document.getElementById('customHtmlContainer');
     if (customContainer) customContainer.innerHTML = s.customHtml || '';
 }
 
 // ═══════════════════════════════════════════
-// PARTICLES (Lightweight)
+// PARTICLES
 // ═══════════════════════════════════════════
 (function() {
     const container = document.getElementById('particles');
@@ -973,11 +907,11 @@ function applySettings() {
 })();
 
 // ═══════════════════════════════════════════
-// API HELPER
+// API HELPER — Uses Vercel proxy
 // ═══════════════════════════════════════════
 async function apiGet(path) {
     try {
-        const res = await fetch(`/api/proxy${path}`);
+        const res = await fetch(`${API}${path}`);
         return await res.json();
     } catch (e) { return {}; }
 }
@@ -991,14 +925,14 @@ async function loadActiveCount() {
         const count = data.count ?? 0;
         document.getElementById('activeCount').textContent = `${count} active session${count===1?'':'s'}`;
     } catch (e) {
-        document.getElementById('activeCount').textContent = 'server offline';
+        document.getElementById('activeCount').textContent = 'online';
     }
 }
 loadActiveCount();
 setInterval(loadActiveCount, 30000);
 
 // ═══════════════════════════════════════════
-// GET PAIRING CODE — NO COUNTRY RESTRICTIONS
+// GET PAIRING CODE
 // ═══════════════════════════════════════════
 async function getCode() {
     const input = document.getElementById('number');
@@ -1033,7 +967,7 @@ async function getCode() {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 30000);
 
-        const res = await fetch(`/api/proxy/code?number=${num}`, {
+        const res = await fetch(`${API}/code?number=${num}`, {
             signal: controller.signal
         });
         clearTimeout(timeout);
@@ -1062,6 +996,11 @@ async function getCode() {
             codeBox.onclick = null;
             copyIcon.style.display = 'none';
             setTimeout(() => getCode(), 10000);
+        } else if (data.error) {
+            codeBox.className = 'code-display error';
+            codeBox.textContent = data.message || data.error;
+            codeBox.onclick = null;
+            copyIcon.style.display = 'none';
         } else {
             codeBox.className = 'code-display error';
             codeBox.textContent = data.message || 'Server busy — try again';
@@ -1070,7 +1009,7 @@ async function getCode() {
         }
     } catch (e) {
         codeBox.className = 'code-display error';
-        codeBox.textContent = e.name === 'AbortError' ? '⏱ Server timeout — try again' : 'Cannot reach server — bot may be offline';
+        codeBox.textContent = e.name === 'AbortError' ? '⏱ Server timeout — try again' : 'Cannot connect — please try again';
         codeBox.onclick = null;
         copyIcon.style.display = 'none';
     } finally {
@@ -1099,22 +1038,18 @@ document.getElementById('number').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') getCode();
 });
 
-// Auto-save last number
 const savedNum = localStorage.getItem(LS.LAST_NUM);
 if (savedNum) document.getElementById('number').value = savedNum;
 document.getElementById('number').addEventListener('input', function() {
     localStorage.setItem(LS.LAST_NUM, this.value.replace(/[^0-9]/g, ''));
 });
 
-// ═══════════════════════════════════════════
-// WELCOME MODAL
-// ═══════════════════════════════════════════
 function closeWelcome() {
     document.getElementById('welcomeModal').classList.remove('show');
 }
 
 // ═══════════════════════════════════════════
-// MUSIC TOGGLE
+// MUSIC
 // ═══════════════════════════════════════════
 const musicBtn = document.getElementById('musicToggle');
 const bgAudio = document.getElementById('bgAudio');
@@ -1165,7 +1100,7 @@ async function unlockAdmin() {
 async function verifyAndEnter(key) {
     const lockMsg = document.getElementById('lockMsg');
     try {
-        const res = await fetch(`/api/proxy/admin/verify-key`, {
+        const res = await fetch(`${API}/admin/verify-key`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ key })
@@ -1181,7 +1116,7 @@ async function verifyAndEnter(key) {
         }
     } catch (e) {
         lockMsg.className = 'admin-msg err';
-        lockMsg.textContent = 'Cannot reach bot server.';
+        lockMsg.textContent = 'Cannot reach server.';
     }
 }
 function showPanelView() {
@@ -1229,13 +1164,11 @@ async function saveSettings() {
         customHtml: document.getElementById('cfgCustomHtml').value
     };
 
-    // Save locally (always works)
     localStorage.setItem(LS.SETTINGS, JSON.stringify(updated));
     siteSettings = { ...DEFAULTS, ...updated };
 
-    // Try to save to bot server too
     try {
-        const res = await fetch(`/api/proxy/admin/site-settings`, {
+        const res = await fetch(`${API}/admin/site-settings`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ key, settings: updated })
@@ -1249,7 +1182,6 @@ async function saveSettings() {
         }
     } catch (e) {}
 
-    // Fallback: saved locally
     applySettings();
     saveMsg.className = 'admin-msg ok';
     saveMsg.textContent = '✅ Saved locally — changes applied instantly!';
@@ -1272,16 +1204,12 @@ document.getElementById('adminKeyInput').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') unlockAdmin();
 });
 
-// ═══════════════════════════════════════════
-// CUSTOM HTML CONTAINER
-// ═══════════════════════════════════════════
+// Custom HTML container
 const customDiv = document.createElement('div');
 customDiv.id = 'customHtmlContainer';
 document.querySelector('.main-wrap').insertBefore(customDiv, document.querySelector('.site-footer'));
 
-// ═══════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════
+// Init
 loadSettings();
 </script>
 
